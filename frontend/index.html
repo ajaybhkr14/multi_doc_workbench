@@ -6,22 +6,7 @@
     <title>Banking Intelligence Workbench</title>
   </head>
   <body>
-    <main>
-      <h1>Multi-Document Banking Intelligence Workbench</h1>
-      <p>Upload PDF, DOCX, or UTF-8 TXT documents. Maximum 5 files, 5 MB each. Scanned documents require OCR and are not supported yet. For mock analysis, use labeled facts such as “Name: Jane Doe” or “Income: 50000”.</p>
-      <form id="analysis-form">
-        <label for="documents">Documents</label>
-        <input id="documents" type="file" accept=".txt,.pdf,.docx,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" multiple required />
-        <label for="instruction">Analysis instruction</label>
-        <textarea id="instruction" maxlength="5000" placeholder="Compare KYC names, addresses and dates of birth" required></textarea>
-        <button type="submit">Upload and analyze</button>
-      </form>
-      <p id="status" role="status"></p>
-      <section aria-labelledby="result-title">
-        <h2 id="result-title">Analysis result</h2>
-        <pre id="result">Results will appear here, with extracted facts separate from findings.</pre>
-      </section>
-    </main>
-    <script type="module" src="/src/main.ts"></script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
