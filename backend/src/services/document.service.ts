@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { saveDocument } from '../db/repositories/document.repository';
-import { extractFacts } from './mock-analysis.service';
+import { extractFacts } from './fact-extraction.service';
 import { validateFileContent, validateFileType } from './file-validation.service';
 import { extractDocumentText } from './text-extraction.service';
 import type { UploadedFile } from '../types/upload';

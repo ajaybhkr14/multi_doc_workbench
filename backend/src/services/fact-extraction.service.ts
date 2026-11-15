@@ -9,8 +9,8 @@ const fieldPatterns: [string, RegExp][] = [
   ['aadhaar', /^(?:aadha+a?r|adhaar|uid)(?: (?:no|number))?$/i],
   ['employer', /^(?:employer(?: name)?|organisation|organization|company)$/i],
   ['declared_income', /^(?:declared|applicant)(?: (?:monthly|annual|yearly))? income$/i],
-  ['net_salary', /^(?:net (?:salary|pay)|take home(?: salary)?|salary credited)$/i],
-  ['gross_salary', /^(?:gross (?:salary|pay)|total earnings)$/i],
+  ['net_salary', /^(?:(?:monthly |annual )?net (?:salary|pay)|net (?:monthly |annual )?(?:salary|pay)|take home(?: salary)?|salary credited)$/i],
+  ['gross_salary', /^(?:(?:monthly |annual )?gross (?:salary|pay)|gross (?:monthly |annual )?(?:salary|pay)|total earnings)$/i],
   ['salary_credit', /^(?:(?:monthly )?salary credit|salary deposit)$/i],
   ['income', /^(?:(?:monthly|annual|yearly|verified) )?(?:income|salary)$/i],
   ['loan_amount', /^(?:(?:requested|proposed|applied) )?loan amount$/i],
@@ -22,7 +22,7 @@ const fieldPatterns: [string, RegExp][] = [
   ['assets', /^(?:total )?assets$/i],
   ['liabilities', /^(?:total )?liabilities$/i],
   ['currency', /^currency$/i],
-  ['period', /^(?:period|pay period|salary month|statement period|financial year|fiscal year|assessment year|month|year)$/i],
+  ['period', /^(?:period|pay period|pay month|salary month|statement period|financial year|fiscal year|assessment year|month|year)$/i],
   ['employment', /^(?:employment(?: status| type)?|occupation|designation)$/i],
   ['transaction_amount', /^(?:transaction|credit|debit) amount$/i],
   ['transaction_date', /^transaction date$/i],
@@ -35,7 +35,7 @@ export function extractFacts(documents: Document[]): ExtractedFact[] {
     const add = (field: string, value: string, lineNumber: number, sourceLabel: string) => {
       if (!value.trim() || /^(?:n\/?a|not provided|unknown|-)$/i.test(value.trim())) return;
       if (facts.some((fact) => fact.field === field && fact.lineNumber === lineNumber && fact.value === value.trim())) return;
-      facts.push({ documentId: document.id, documentName: document.name, field, value: value.trim(),
+      facts.push({ documentId: document.id, documentName: document.name, filename: document.name, field, value: value.trim(),
         evidence: lines[lineNumber - 1].trim(), lineNumber, sourceLabel });
     };
     lines.forEach((line, index) => {
@@ -57,11 +57,15 @@ export function extractFacts(documents: Document[]): ExtractedFact[] {
             if (fact) { fact.value += ` ${continuation.join(' ')}`; fact.evidence = lines.slice(index, index + 1 + continuation.length).join('\n'); }
           }
         }
-      } else {
+      } else if (!/^\s*(?:pan card|salary slip|pay\s*slip|bank statement|loan application|financial statement)\s*$/i.test(line)) {
         // Common printed labels without punctuation: "Net Salary 50,000".
         for (const [field, pattern] of fieldPatterns) {
           const words = line.trim().split(/\s+/);
-          const split = words.findIndex((_, position) => position > 0 && pattern.test(words.slice(0, position).join(' ')));
+          // Prefer the longest label: "PAN Number ..." must not use "Number ..." as its value.
+          let split = -1;
+          for (let position = 1; position < words.length; position++) {
+            if (pattern.test(words.slice(0, position).join(' '))) split = position;
+          }
           if (split > 0) { add(field, words.slice(split).join(' '), index + 1, words.slice(0, split).join(' ')); break; }
         }
       }

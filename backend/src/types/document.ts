@@ -7,6 +7,7 @@ export interface Document {
 export interface ExtractedFact {
   documentId: string;
   documentName: string;
+  filename: string;
   field: string;
   value: string;
   evidence: string;

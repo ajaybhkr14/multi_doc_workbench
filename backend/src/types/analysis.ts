@@ -5,6 +5,7 @@ export type DocumentType = 'pan' | 'aadhaar' | 'salary_slip' | 'bank_statement' 
 export interface DocumentEvidence {
   documentId: string;
   documentName: string;
+  filename: string;
   documentType: DocumentType;
   evidence: string;
   lineNumber: number | null;
@@ -23,6 +24,7 @@ export interface Finding {
     rightValue: number;
     difference: number;
     absoluteDifference: number;
+    // Signed percentage relative to rightValue; null when that baseline is zero.
     percentageDifference: number | null;
     currency: string;
     period: string;
@@ -32,6 +34,7 @@ export interface Finding {
 export interface AnalyzedDocument {
   documentId: string;
   documentName: string;
+  filename: string;
   documentType: DocumentType;
   facts: ExtractedFact[];
 }
