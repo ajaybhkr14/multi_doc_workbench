@@ -1,0 +1,10 @@
+:root { font-family: system-ui, sans-serif; color: #172c43; background: #f3f6fa; }
+body { margin: 0; }
+main { max-width: 900px; margin: 48px auto; padding: 24px; }
+h1 { font-size: 28px; }
+p { line-height: 1.6; }
+form { display: grid; gap: 12px; padding: 24px; background: white; border: 1px solid #d5dfe9; border-radius: 8px; }
+textarea { min-height: 100px; padding: 12px; font: inherit; resize: vertical; }
+button { padding: 12px; background: #174f91; color: white; border: 0; border-radius: 4px; font: inherit; cursor: pointer; }
+button:disabled { opacity: .6; cursor: wait; }
+pre { padding: 20px; background: white; border: 1px solid #d5dfe9; overflow-wrap: anywhere; white-space: pre-wrap; }
